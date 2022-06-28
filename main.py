@@ -1,12 +1,5 @@
+from utils import *
 import sys
-
-#Global Constants
-MAX_LINES = 256
-REG_SIZE = 3
-MEM_SIZE = 8
-OPCODE_SIZE = 5
-IMM_SIZE = 8
-
 
 assembly_input = sys.stdin.read().split('\n')
 
@@ -20,23 +13,28 @@ while lst[i][0] == "var":
     var_count += 1
     i += 1
 
-for inst in lst[var_count:length]:
+for inst in lst[var_count:code_length]:
     pass
     # convert(inst)
 
 
-rdict = {"R0" : "000",
-        "R1" : "001",
-        "R2" : "010",
-        "R3" : "011",
-        "R4" : "100",
-        "R5" : "101",
-        "R6" : "110",
-        "FLAGS" : "110"}
-
 def typeA(lst):
     s = get_opcode[lst[0]] + "00" + get_reg[lst[1]] + get_reg[lst[2]] + get_reg[lst[3]]
     return s
+
+
+def typeB(lst):
+    opcode = get_opcode(lst[0]) if (lst[0]!="mov") else get_opcode("mov_i")
+    immediate = bin(lst[2][1:])[2:]
+    if (not (0 <= immediate <=255)):
+        raise Exception(f"The value of immediate {immediate} should be integer in range [0, 255]")
+    return opcode + get_reg(lst[1]) + ("0"*(8-len(immediate))) + immediate
+
+
+def typeC(lst):
+    opcode = get_opcode(lst[0]) if (lst[0]!="mov") else get_opcode("mov_r")
+    return opcode + "0"*5 + get_reg(lst[1]) + get_reg(lst[2])
+
 
 def typeF(lst):
     s = get_opcode[lst[0]] + "00000000000"
@@ -55,29 +53,3 @@ elif (get_opcode[lst[0]] in ["01111", "01101", "11111", "01100"]):
     s = typeE(lst)
 else:
     s = typeF(lst)
-
-#----EOF----
-
-
-opCode = {
-        "add":"10000",
-        "sub":"10001",
-        "movi":"10010",
-        "movr":"10011",
-        "ld":"10100",
-        "st":"10101",
-        "mul":"10110",
-        "div":"10111",
-        "rs":"11000",
-        "ls":"11001",
-        "xor":"11010",
-        "or":"11011",
-        "and":"11100",
-        "not":"11101",
-        "cmp":"11110",
-        "jmp":"11111",
-        "jlt":"01100",
-        "jgt":"01101",
-        "je":"01111",
-        "hlt":"01010"
-        }

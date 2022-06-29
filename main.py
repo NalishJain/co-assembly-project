@@ -3,9 +3,16 @@ import sys
 
 assembly_input = sys.stdin.read().split('\n')
 
-lst = [i.split() for i in assembly_input]
+init_lst = [i.split() for i in assembly_input]
 
-code_length = len(lst)-1
+lst = []
+for i in init_lst:
+    if i == []:
+        continue
+    lst.append(i)
+print(lst)
+
+code_length = len(lst)
 
 i = 0
 var_count = 0
@@ -13,43 +20,59 @@ while lst[i][0] == "var":
     var_count += 1
     i += 1
 
-for inst in lst[var_count:code_length]:
-    pass
-    # convert(inst)
+var_dict = {}
+mem_addr = code_length - var_count
+for i in lst[:var_count]:
+    var_dict[i[1]] = bin(mem_addr)[2:]
+    mem_addr += 1
+print(var_dict)
 
-
-def typeA(lst):
-    s = get_opcode[lst[0]] + "00" + get_reg[lst[1]] + get_reg[lst[2]] + get_reg[lst[3]]
+def typeA(inst):
+    s = get_opcode[inst[0]] + "00" + get_reg[inst[1]] + get_reg[inst[2]] + get_reg[inst[3]]
     return s
 
 
-def typeB(lst):
-    opcode = get_opcode(lst[0]) if (lst[0]!="mov") else get_opcode("mov_i")
-    immediate = bin(lst[2][1:])[2:]
+def typeB(inst):
+    opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movi")
+    immediate = bin(inst[2][1:])[2:]
     if (not (0 <= immediate <=255)):
         raise Exception(f"The value of immediate {immediate} should be integer in range [0, 255]")
-    return opcode + get_reg(lst[1]) + ("0"*(8-len(immediate))) + immediate
+    return opcode + get_reg(inst[1]) + ("0"*(8-len(immediate))) + immediate
 
 
-def typeC(lst):
-    opcode = get_opcode(lst[0]) if (lst[0]!="mov") else get_opcode("mov_r")
-    return opcode + "0"*5 + get_reg(lst[1]) + get_reg(lst[2])
+def typeC(inst):
+    opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movr")
+    return opcode + "0"*5 + get_reg(inst[1]) + get_reg(inst[2])
 
+def typeD(inst):
+    opcode = get_opcode(inst[0])
+    return opcode + get_reg(inst[1]) + ("0"*(8-len(var_dict[inst[2]]))) + var_dict[inst[2]]
 
-def typeF(lst):
-    s = get_opcode[lst[0]] + "00000000000"
+def typeE(inst):
+    pass
+
+def typeF(inst):
+    s = get_opcode[inst[0]] + "00000000000"
     return s
 
+def convert(inst):
+    if (get_opcode(inst[0]) in ["10000","10001","10110","11010" ,"11011","11100"]):
+        s = typeA(inst)
+    elif (get_opcode(inst[0]) in ["11001", "10010"]):
+        s = typeB(inst)
+    elif (get_opcode(inst[0]) in ["10011", "10111", "11101", "11110"]):
+        s = typeC(inst)
+    elif (get_opcode(inst[0]) in ["10101", "10100"]):
+        s = typeD(inst)
+    elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):
+        s = typeE(inst)
+    else:
+        s = typeF(inst)
 
-if (get_opcode[lst[0]] in ["10000","10001","10110","11010" ,"11011","11100"]):
-    s = typeA(lst)
-elif (get_opcode[lst[0]] in ["11001", "10010"]):
-    s = typeB(lst)
-elif (get_opcode[lst[0]] in ["10011", "10111", "11101", "11110"]):
-    s = typeC(lst)
-elif (get_opcode[lst[0]] in ["10101", "10100"]):
-    s = typeD(lst)
-elif (get_opcode[lst[0]] in ["01111", "01101", "11111", "01100"]):
-    s = typeE(lst)
-else:
-    s = typeF(lst)
+    return s
+
+binary_lst = []
+for inst in lst[var_count:code_length]:
+    print(inst)
+    binary_lst.append(convert(inst))
+

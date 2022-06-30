@@ -50,3 +50,4 @@ def get_opcode(ins):
         return opCode[ins]
     
     raise Exception(f"Method {ins} does not exist")
+    

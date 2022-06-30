@@ -1,3 +1,11 @@
-this is the input
-we shall see what happens to this
-aight bye
+
+var xyz
+
+var abc
+
+
+
+st R1 xyz
+add R1 R2 R3
+
+st R3 abc

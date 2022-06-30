@@ -8,4 +8,7 @@ var abc
 st R1 xyz
 add R1 R2 R3
 
+
 st R3 abc
+
+hlt

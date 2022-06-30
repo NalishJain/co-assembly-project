@@ -60,7 +60,7 @@ def typeF(inst):
 def convert(inst):
 
     if (inst[0] == "mov"):
-        "FLAGS" : "110"
+        # "FLAGS" : "110"
         if '$' in inst[2]:
             typeB(inst)
         else:
@@ -76,9 +76,14 @@ def convert(inst):
         s = typeD(inst)
     elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):
         s = typeE(inst)
+    elif (get_opcode(inst[0]) == "01010"):
+        s = typeF(inst)
     return s
 
 binary_lst = []
 
-for inst in lst[var_count:code_length-1]:
+for inst in lst[var_count:code_length]:
     binary_lst.append(convert(inst))
+
+# for i in binary_lst:
+#     print(i)

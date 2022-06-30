@@ -52,9 +52,9 @@ def get_opcode(ins):
 
 def missing_hlt(lst):
     if lst[-1][0] != "hlt":
-        raise Exception("Halt instruction missing")
+        raise Exception("Halt instruction not present at the end")
 
 def hlt_not_at_end(lst):
     for i in range(len(lst) - 1):
         if lst[i][0] == "hlt":
-            raise Exception("Halt instruction is not the last instruction")
+            raise Exception("Halt instruction should be the last instruction only")

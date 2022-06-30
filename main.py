@@ -11,6 +11,8 @@ for i in init_lst:
         continue
     lst.append(i)
 print(lst)
+missing_hlt(lst)
+hlt_not_at_end(lst)
 
 code_length = len(lst)
 

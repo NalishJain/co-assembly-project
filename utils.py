@@ -47,5 +47,14 @@ def get_reg(reg):
 def get_opcode(ins):
     if ins in opCode:
         return opCode[ins]
-
+    
     raise Exception(f"Method {ins} does not exist")
+
+def missing_hlt(lst):
+    if lst[-1][0] != "hlt":
+        raise Exception("Halt instruction missing")
+
+def hlt_not_at_end(lst):
+    for i in range(len(lst) - 1):
+        if lst[i][0] == "hlt":
+            raise Exception("Halt instruction is not the last instruction")

@@ -31,7 +31,6 @@ def typeA(inst):
     s = get_opcode(inst[0]) + "00" + get_reg(inst[1]) + get_reg(inst[2]) + get_reg(inst[3])
     return s
 
-
 def typeB(inst):
     opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movi")
     immediate = bin(inst[2][1:])[2:]
@@ -39,9 +38,10 @@ def typeB(inst):
         raise Exception(f"The value of immediate {immediate} should be integer in range [0, 255]")
     return opcode + get_reg(inst[1]) + ("0"*(8-len(immediate))) + immediate
 
-
 def typeC(inst):
     opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movr")
+    if inst[0] == "mov" and inst[2] == "FLAGS":
+        return opcode + "0"*5 + get_reg(inst[1]) + "111" #FLAGS at 111
     return opcode + "0"*5 + get_reg(inst[1]) + get_reg(inst[2])
 
 def typeD(inst):
@@ -58,6 +58,7 @@ def typeF(inst):
 def convert(inst):
 
     if (inst[0] == "mov"):
+        "FLAGS" : "110"
         if '$' in inst[2]:
             typeB(inst)
         else:
@@ -73,13 +74,12 @@ def convert(inst):
         s = typeD(inst)
     elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):
         s = typeE(inst)
-    else:
-        s = typeF(inst)
-
     return s
 
 binary_lst = []
-for inst in lst[var_count:code_length]:
+
+for inst in lst[var_count:code_length-1]:
     print(inst)
     binary_lst.append(convert(inst))
+
 

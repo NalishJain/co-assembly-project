@@ -11,8 +11,7 @@ rdict = {"R0" : "000",
         "R3" : "011", 
         "R4" : "100", 
         "R5" : "101", 
-        "R6" : "110", 
-        "FLAGS" : "110"}
+        "R6" : "110"}
 
 opCode = {
         "add":"10000",
@@ -40,8 +39,8 @@ opCode = {
 
 def get_reg(reg):
     if reg in rdict:
-        return reg[rdict]
-    
+        return rdict[reg]
+
     raise Exception(f"The register {reg} you are trying to access does not exist")
 
 

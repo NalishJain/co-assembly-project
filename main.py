@@ -28,7 +28,7 @@ for i in lst[:var_count]:
 print(var_dict)
 
 def typeA(inst):
-    s = get_opcode[inst[0]] + "00" + get_reg[inst[1]] + get_reg[inst[2]] + get_reg[inst[3]]
+    s = get_opcode(inst[0]) + "00" + get_reg(inst[1]) + get_reg(inst[2]) + get_reg(inst[3])
     return s
 
 
@@ -52,7 +52,7 @@ def typeE(inst):
     pass
 
 def typeF(inst):
-    s = get_opcode[inst[0]] + "00000000000"
+    s = get_opcode(inst[0]) + "00000000000"
     return s
 
 def convert(inst):
@@ -76,3 +76,5 @@ for inst in lst[var_count:code_length]:
     print(inst)
     binary_lst.append(convert(inst))
 
+for i in binary_lst:
+    print(i)

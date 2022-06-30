@@ -39,14 +39,13 @@ opCode = {
 
 def get_reg(reg):
     if reg in rdict:
-        return reg[rdict]
-    
+        return rdict[reg]
+
     raise Exception(f"The register {reg} you are trying to access does not exist")
 
 
 def get_opcode(ins):
     if ins in opCode:
         return opCode[ins]
-    
+
     raise Exception(f"Method {ins} does not exist")
-    

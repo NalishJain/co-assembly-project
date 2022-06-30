@@ -52,7 +52,7 @@ def typeE(inst):
     pass
 
 def typeF(inst):
-    s = get_opcode[inst[0]] + "00000000000"
+    s = get_opcode(inst[0]) + "00000000000"
     return s
 
 def convert(inst):
@@ -79,7 +79,4 @@ def convert(inst):
 binary_lst = []
 
 for inst in lst[var_count:code_length-1]:
-    print(inst)
     binary_lst.append(convert(inst))
-
-

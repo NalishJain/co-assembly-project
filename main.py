@@ -56,11 +56,18 @@ def typeF(inst):
     return s
 
 def convert(inst):
-    if (get_opcode(inst[0]) in ["10000","10001","10110","11010" ,"11011","11100"]):
+
+    if (inst[0] == "mov"):
+        if '$' in inst[2]:
+            typeB(inst)
+        else:
+            typeC(inst)
+
+    elif (get_opcode(inst[0]) in ["10000","10001","10110","11010" ,"11011","11100"]):
         s = typeA(inst)
-    elif (get_opcode(inst[0]) in ["11001", "10010"]):
+    elif (get_opcode(inst[0]) in ["11001"]):
         s = typeB(inst)
-    elif (get_opcode(inst[0]) in ["10011", "10111", "11101", "11110"]):
+    elif (get_opcode(inst[0]) in ["10111", "11101", "11110"]):
         s = typeC(inst)
     elif (get_opcode(inst[0]) in ["10101", "10100"]):
         s = typeD(inst)

@@ -50,13 +50,3 @@ def get_opcode(ins):
 
     raise Exception(f"Method {ins} does not exist")
 
-def missing_hlt(lst):
-    if lst[-1][0] != "hlt":
-        raise Exception("Halt instruction not present at the end")
-
-def hlt_not_at_end(lst):
-    for i in range(len(lst) - 1):
-        if lst[i] == []:
-            continue
-        if lst[i][0] == "hlt":
-            raise Exception("Halt instruction should be the last instruction only")

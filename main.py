@@ -29,9 +29,7 @@ for i in range(len(init_lst)):
         inst_count += 1
 
 
-missing_hlt(init_lst)
-hlt_not_at_end(init_lst)
-
+errors.hltErrors(init_lst)
 
 # Creating dictionary for variables
 var_dict = {}

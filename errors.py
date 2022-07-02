@@ -33,3 +33,25 @@ def labelAlreadyExists(line_num):
 def labelNotDefined(line_num):
     sys.stdout.write(f'Error at line {line_num}: label not defined\n')
     sys.exit()
+
+
+def hltErrors(lst):
+    for i in range(len(lst) - 1, -1, -1):
+        if lst[i] == []:
+            continue
+        if lst[i] != []:
+            if lst[i][0] != "hlt":
+                sys.stdout.write(f'Error at line {i + 1}: Halt instruction not present at the end\n')
+                sys.exit()
+            else:
+                flag = 1
+                t = i 
+                break
+    if flag == 1:
+        for i in range(t - 1, -1, -1):
+            if lst[i] == []:
+                continue
+            if lst[i][0] == "hlt":
+                sys.stdout.write(f'Error at line {i + 1}: Multiple halt instructions present\n')
+                sys.exit()
+                

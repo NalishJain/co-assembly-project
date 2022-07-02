@@ -6,8 +6,11 @@ import errors
 
 assembly_input = sys.stdin.read().split('\n')
 
-init_lst = [i.split() for i in assembly_input][:-1]
+init_lst = [i.split() for i in assembly_input]
 print(init_lst)
+
+
+errors.hltErrors(init_lst)
 
 var_count = 0
 label_count = 0
@@ -29,7 +32,6 @@ for i in range(len(init_lst)):
         inst_count += 1
 
 
-errors.hltErrors(init_lst)
 
 # Creating dictionary for variables
 var_dict = {}
@@ -73,8 +75,8 @@ def typeA(inst, line_num):
 
 def typeB(inst, line_num):
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movi", line_num)
-    immediate = bin(inst[2][1:])[2:]
-    errors.check_immediate(immediate, line_num)
+    immediate = bin(int(inst[2][1:]))[2:]
+    errors.check_immediate(int(inst[2][1:]), line_num)
     return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(immediate))) + immediate
 
 def typeC(inst, line_num):
@@ -98,12 +100,12 @@ def typeF(inst, line_num):
     return s
 
 def convert(inst, line_num):
-
+    print(line_num)
     if (inst[0] == "mov"):
         if '$' in inst[2]:
-            typeB(inst)
+            s = typeB(inst, line_num)
         else:
-            typeC(inst)
+            s = typeC(inst, line_num)
 
     elif (get_opcode(inst[0], line_num) in ["10000","10001","10110","11010" ,"11011","11100"]):
         s = typeA(inst, line_num)

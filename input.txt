@@ -3,12 +3,12 @@ var xyz
 
 var abc
 
+je bye
 
-
-st R1 xyz
+label: st R1 xyz
 add R1 R2 R3
+jgt label
 
-
-st R3 abc
+bye: st R3 abc
 
 hlt

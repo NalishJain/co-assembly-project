@@ -6,11 +6,11 @@ OPCODE_SIZE = 5
 IMM_SIZE = 8
 
 rdict = {"R0" : "000",
-        "R1" : "001", 
-        "R2" : "010", 
-        "R3" : "011", 
-        "R4" : "100", 
-        "R5" : "101", 
+        "R1" : "001",
+        "R2" : "010",
+        "R3" : "011",
+        "R4" : "100",
+        "R5" : "101",
         "R6" : "110"}
 
 opCode = {
@@ -47,7 +47,7 @@ def get_reg(reg):
 def get_opcode(ins):
     if ins in opCode:
         return opCode[ins]
-    
+
     raise Exception(f"Method {ins} does not exist")
 
 def missing_hlt(lst):
@@ -56,5 +56,7 @@ def missing_hlt(lst):
 
 def hlt_not_at_end(lst):
     for i in range(len(lst) - 1):
+        if lst[i] == []:
+            continue
         if lst[i][0] == "hlt":
             raise Exception("Halt instruction should be the last instruction only")

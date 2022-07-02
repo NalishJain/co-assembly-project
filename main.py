@@ -67,8 +67,8 @@ print(label_dict)
 
 
 
-def typeA(inst):
-    s = get_opcode(inst[0]) + "00" + get_reg(inst[1]) + get_reg(inst[2]) + get_reg(inst[3])
+def typeA(inst, line_num):
+    s = get_opcode(inst[0], line_num) + "00" + get_reg(inst[1], line_num) + get_reg(inst[2], line_num) + get_reg(inst[3], line_num)
     return s
 
 def typeB(inst, line_num):
@@ -84,17 +84,17 @@ def typeC(inst, line_num):
     return opcode + "0"*5 + get_reg(inst[1], line_num) + get_reg(inst[2], line_num)
 
 def typeD(inst, line_num):
-    opcode = get_opcode(inst[0])
-    errors.checkVariable(inst, line_num, label_dict)
-    return opcode + get_reg(inst[1]) + ("0"*(8-len(var_dict[inst[2]]))) + var_dict[inst[2]]
+    opcode = get_opcode(inst[0], line_num)
+    errors.checkVariable(inst, line_num, var_dict)
+    return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(var_dict[inst[2]]))) + var_dict[inst[2]]
 
 def typeE(inst, line_num):
-    opcode = get_opcode(inst[0])
+    opcode = get_opcode(inst[0], line_num)
     errors.checkLabel(inst, line_num, label_dict)
     return opcode + "000" + ("0"*(8-len(label_dict[inst[1]]))) + label_dict[inst[1]]
 
-def typeF(inst):
-    s = get_opcode(inst[0]) + "00000000000"
+def typeF(inst, line_num):
+    s = get_opcode(inst[0], line_num) + "00000000000"
     return s
 
 def convert(inst, line_num):
@@ -106,18 +106,18 @@ def convert(inst, line_num):
         else:
             typeC(inst)
 
-    elif (get_opcode(inst[0]) in ["10000","10001","10110","11010" ,"11011","11100"]):
-        s = typeA(inst)
-    elif (get_opcode(inst[0]) in ["11001"]):
+    elif (get_opcode(inst[0], line_num) in ["10000","10001","10110","11010" ,"11011","11100"]):
+        s = typeA(inst, line_num)
+    elif (get_opcode(inst[0], line_num) in ["11001"]):
         s = typeB(inst, line_num)
-    elif (get_opcode(inst[0]) in ["10111", "11101", "11110"]):
+    elif (get_opcode(inst[0], line_num) in ["10111", "11101", "11110"]):
         s = typeC(inst, line_num)
-    elif (get_opcode(inst[0]) in ["10101", "10100"]):
+    elif (get_opcode(inst[0], line_num) in ["10101", "10100"]):
         s = typeD(inst, line_num)
-    elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):
+    elif (get_opcode(inst[0], line_num) in ["01111", "01101", "11111", "01100"]):
         s = typeE(inst, line_num)
-    elif (get_opcode(inst[0]) == "01010"):
-        s = typeF(inst)
+    elif (get_opcode(inst[0], line_num) == "01010"):
+        s = typeF(inst, line_num)
     return s
 
 binary_lst = []

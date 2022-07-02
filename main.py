@@ -79,7 +79,7 @@ def typeB(inst, line_num):
 
 def typeC(inst, line_num):
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movr", line_num)
-    if inst[0] == "mov" and inst[2] == "FLAGS":
+    if inst[0] == "mov" and inst[1] == "FLAGS":
         return opcode + "0"*5 + get_reg(inst[1], line_num) + "111" #FLAGS at 111
     return opcode + "0"*5 + get_reg(inst[1], line_num) + get_reg(inst[2], line_num)
 
@@ -100,7 +100,6 @@ def typeF(inst, line_num):
 def convert(inst, line_num):
 
     if (inst[0] == "mov"):
-        # "FLAGS" : "110"
         if '$' in inst[2]:
             typeB(inst)
         else:
@@ -108,7 +107,7 @@ def convert(inst, line_num):
 
     elif (get_opcode(inst[0], line_num) in ["10000","10001","10110","11010" ,"11011","11100"]):
         s = typeA(inst, line_num)
-    elif (get_opcode(inst[0], line_num) in ["11001"]):
+    elif (get_opcode(inst[0], line_num) in ["11000", "11001"]):
         s = typeB(inst, line_num)
     elif (get_opcode(inst[0], line_num) in ["10111", "11101", "11110"]):
         s = typeC(inst, line_num)

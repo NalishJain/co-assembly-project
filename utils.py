@@ -1,4 +1,3 @@
-from pickletools import opcodes
 import errors
 
 #Global Constants

@@ -8,9 +8,6 @@ def varAlreadyExists(line_num):
     sys.stdout.write(f'Error at line {line_num}: variable already exists\n')
     sys.exit()
 
-def varNotDefined(line_num):
-    sys.stdout.write(f'Error at line {line_num}: variable not defined\n')
-    sys.exit()
 
 def checkVariable(inst, i, var_dict):
     if inst[2] in var_dict.keys():
@@ -28,10 +25,6 @@ def checkLabel(inst, i, label_dict):
 
 def labelAlreadyExists(line_num):
     sys.stdout.write(f'Error at line {line_num}: label already exists\n')
-    sys.exit()
-
-def labelNotDefined(line_num):
-    sys.stdout.write(f'Error at line {line_num}: label not defined\n')
     sys.exit()
 
 
@@ -55,3 +48,17 @@ def hltErrors(lst):
                 sys.stdout.write(f'Error at line {i + 1}: Multiple halt instructions present\n')
                 sys.exit()
                 
+def check_immediate(immediate, line_num):
+    if (not (0 <= immediate <=255)):
+        sys.stdout.write(f"Error: line {line_num}, The value of immediate {immediate} should be integer in range [0, 255]")
+        sys.exit()
+
+def check_reg(reg, rdict, line_num):
+    if reg not in rdict:
+        sys.stdout.write(f"Error: line {line_num}, register {reg} you are trying to access does not exist")
+        sys.exit()
+
+def check_opcode(ins, opCode, line_num):
+    if ins not in opCode:
+        sys.stdout.write(f"Error: line {line_num}, instruction {ins} does not exist")
+        sys.exit()

@@ -1,3 +1,6 @@
+from pickletools import opcodes
+import errors
+
 #Global Constants
 MAX_LINES = 256
 REG_SIZE = 3
@@ -37,16 +40,12 @@ opCode = {
         }
 
 
-def get_reg(reg):
-    if reg in rdict:
-        return rdict[reg]
-
-    raise Exception(f"The register {reg} you are trying to access does not exist")
+def get_reg(reg, line_num):
+    errors.check_reg(reg, rdict, line_num)
+    return rdict[reg]
 
 
-def get_opcode(ins):
-    if ins in opCode:
-        return opCode[ins]
-
-    raise Exception(f"Method {ins} does not exist")
+def get_opcode(ins, line_num):
+    errors.check_opcode(ins, opCode, line_num)
+    return opCode[ins]
 

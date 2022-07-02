@@ -18,7 +18,7 @@ for i in range(len(init_lst)):
         continue
     elif init_lst[i][0] == 'var':
         if var_flag == True:
-            errors.varsNotAtBeginning(i)
+          errors.varsNotAtBeginning(i+1)
         var_count += 1
     elif init_lst[i][0][-1] == ':':
         label_count += 1
@@ -34,7 +34,7 @@ errors.hltErrors(init_lst)
 # Creating dictionary for variables
 var_dict = {}
 mem_addr = inst_count
-line_num = 0
+line_num = 1
 for i in init_lst:
     if i == []:
         line_num += 1
@@ -51,7 +51,7 @@ print(var_dict)
 # Creating dictionary for labels
 label_dict = {}
 mem_addr = 0
-line_num = 0
+line_num = 1
 for inst in init_lst:
     if inst == [] or inst[0] == 'var':
         line_num += 1
@@ -121,7 +121,7 @@ def convert(inst, line_num):
     return s
 
 binary_lst = []
-line_num = 0
+line_num = 1
 for inst in init_lst:
     if inst != [] and inst[0] != 'var':
         if inst[0][-1] == ':':

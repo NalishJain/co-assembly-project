@@ -73,18 +73,17 @@ def typeA(inst):
     s = get_opcode(inst[0]) + "00" + get_reg(inst[1]) + get_reg(inst[2]) + get_reg(inst[3])
     return s
 
-def typeB(inst):
-    opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movi")
+def typeB(inst, line_num):
+    opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movi", line_num)
     immediate = bin(inst[2][1:])[2:]
-    if (not (0 <= immediate <=255)):
-        raise Exception(f"The value of immediate {immediate} should be integer in range [0, 255]")
-    return opcode + get_reg(inst[1]) + ("0"*(8-len(immediate))) + immediate
+    errors.check_immediate(immediate, line_num)
+    return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(immediate))) + immediate
 
-def typeC(inst):
-    opcode = get_opcode(inst[0]) if (inst[0]!="mov") else get_opcode("movr")
+def typeC(inst, line_num):
+    opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movr", line_num)
     if inst[0] == "mov" and inst[2] == "FLAGS":
-        return opcode + "0"*5 + get_reg(inst[1]) + "111" #FLAGS at 111
-    return opcode + "0"*5 + get_reg(inst[1]) + get_reg(inst[2])
+        return opcode + "0"*5 + get_reg(inst[1], line_num) + "111" #FLAGS at 111
+    return opcode + "0"*5 + get_reg(inst[1], line_num) + get_reg(inst[2], line_num)
 
 def typeD(inst, line_num):
     opcode = get_opcode(inst[0])
@@ -112,9 +111,9 @@ def convert(inst, line_num):
     elif (get_opcode(inst[0]) in ["10000","10001","10110","11010" ,"11011","11100"]):
         s = typeA(inst)
     elif (get_opcode(inst[0]) in ["11001"]):
-        s = typeB(inst)
+        s = typeB(inst, line_num)
     elif (get_opcode(inst[0]) in ["10111", "11101", "11110"]):
-        s = typeC(inst)
+        s = typeC(inst, line_num)
     elif (get_opcode(inst[0]) in ["10101", "10100"]):
         s = typeD(inst, line_num)
     elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):

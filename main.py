@@ -1,33 +1,73 @@
 from utils import *
 import sys
+import errors
+
+# all errors should be defined in errors.py to distinguish them from normal util funcs
 
 assembly_input = sys.stdin.read().split('\n')
 
-init_lst = [i.split() for i in assembly_input]
+init_lst = [i.split() for i in assembly_input][:-1]
+print(init_lst)
 
-lst = []
+var_count = 0
+label_count = 0
+inst_count = 0
+var_flag = False
+for i in range(len(init_lst)):
+    if init_lst[i] == []:
+        continue
+    elif init_lst[i][0] == 'var':
+        if var_flag == True:
+            errors.varsNotAtBeginning(i)
+        var_count += 1
+    elif init_lst[i][0][-1] == ':':
+        label_count += 1
+        var_flag = True
+        inst_count += 1
+    else:
+        var_flag = True
+        inst_count += 1
+
+
+missing_hlt(init_lst)
+hlt_not_at_end(init_lst)
+
+
+# Creating dictionary for variables
+var_dict = {}
+mem_addr = inst_count
+line_num = 0
 for i in init_lst:
     if i == []:
+        line_num += 1
         continue
-    lst.append(i)
-print(lst)
-missing_hlt(lst)
-hlt_not_at_end(lst)
+    if i[0] == 'var':
+        if i[1] in var_dict.keys():
+            errors.varAlreadyExists(line_num)
+        var_dict[i[1]] = bin(mem_addr)[2:]
+        mem_addr += 1
+    line_num += 1
 
-code_length = len(lst)
-
-i = 0
-var_count = 0
-while lst[i][0] == "var":
-    var_count += 1
-    i += 1
-
-var_dict = {}
-mem_addr = code_length - var_count
-for i in lst[:var_count]:
-    var_dict[i[1]] = bin(mem_addr)[2:]
-    mem_addr += 1
 print(var_dict)
+
+# Creating dictionary for labels
+label_dict = {}
+mem_addr = 0
+line_num = 0
+for inst in init_lst:
+    if inst == [] or inst[0] == 'var':
+        line_num += 1
+        continue
+    if inst[0][-1] == ':':
+        if inst[1] in label_dict.keys():
+            errors.labelAlreadyExists(line_num)
+        label_dict[inst[0][:-1]] = bin(mem_addr)[2:]
+    mem_addr += 1
+    line_num += 1
+
+print(label_dict)
+
+
 
 def typeA(inst):
     s = get_opcode(inst[0]) + "00" + get_reg(inst[1]) + get_reg(inst[2]) + get_reg(inst[3])
@@ -46,18 +86,21 @@ def typeC(inst):
         return opcode + "0"*5 + get_reg(inst[1]) + "111" #FLAGS at 111
     return opcode + "0"*5 + get_reg(inst[1]) + get_reg(inst[2])
 
-def typeD(inst):
+def typeD(inst, line_num):
     opcode = get_opcode(inst[0])
+    errors.checkVariable(inst, line_num, label_dict)
     return opcode + get_reg(inst[1]) + ("0"*(8-len(var_dict[inst[2]]))) + var_dict[inst[2]]
 
-def typeE(inst):
-    pass
+def typeE(inst, line_num):
+    opcode = get_opcode(inst[0])
+    errors.checkLabel(inst, line_num, label_dict)
+    return opcode + "000" + ("0"*(8-len(label_dict[inst[1]]))) + label_dict[inst[1]]
 
 def typeF(inst):
     s = get_opcode(inst[0]) + "00000000000"
     return s
 
-def convert(inst):
+def convert(inst, line_num):
 
     if (inst[0] == "mov"):
         # "FLAGS" : "110"
@@ -73,17 +116,25 @@ def convert(inst):
     elif (get_opcode(inst[0]) in ["10111", "11101", "11110"]):
         s = typeC(inst)
     elif (get_opcode(inst[0]) in ["10101", "10100"]):
-        s = typeD(inst)
+        s = typeD(inst, line_num)
     elif (get_opcode(inst[0]) in ["01111", "01101", "11111", "01100"]):
-        s = typeE(inst)
+        s = typeE(inst, line_num)
     elif (get_opcode(inst[0]) == "01010"):
         s = typeF(inst)
     return s
 
 binary_lst = []
-
-for inst in lst[var_count:code_length]:
-    binary_lst.append(convert(inst))
+line_num = 0
+for inst in init_lst:
+    if inst != [] and inst[0] != 'var':
+        if inst[0][-1] == ':':
+            binary_lst.append(convert(inst[1:], line_num))
+        else:
+            binary_lst.append(convert(inst, line_num))
+    line_num += 1
 
 # for i in binary_lst:
 #     print(i)
+
+for i in binary_lst:
+    sys.stdout.write(i+'\n')

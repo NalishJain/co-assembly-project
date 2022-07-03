@@ -4,69 +4,83 @@ import errors
 
 # all errors should be defined in errors.py to distinguish them from normal util funcs
 
-assembly_input = sys.stdin.read().split('\n')
+try:
+    assembly_input = sys.stdin.read().split('\n')
 
-init_lst = [i.split() for i in assembly_input]
-print(init_lst)
-
-
-errors.hltErrors(init_lst)
-
-var_count = 0
-label_count = 0
-inst_count = 0
-var_flag = False
-for i in range(len(init_lst)):
-    if init_lst[i] == []:
-        continue
-    elif init_lst[i][0] == 'var':
-        if var_flag == True:
-          errors.varsNotAtBeginning(i+1)
-        var_count += 1
-    elif init_lst[i][0][-1] == ':':
-        label_count += 1
-        var_flag = True
-        inst_count += 1
-    else:
-        var_flag = True
-        inst_count += 1
+    init_lst = [i.split() for i in assembly_input]
+    print(init_lst)
 
 
+    errors.hltErrors(init_lst)
 
-# Creating dictionary for variables
-var_dict = {}
-mem_addr = inst_count
-line_num = 1
-for i in init_lst:
-    if i == []:
+    var_count = 0
+    label_count = 0
+    inst_count = 0
+    var_flag = False
+    for i in range(len(init_lst)):
+        if init_lst[i] == []:
+            continue
+        elif init_lst[i][0] == 'var':
+            if var_flag == True:
+                errors.varsNotAtBeginning(i+1)
+            var_count += 1
+        elif init_lst[i][0][-1] == ':':
+            if len(init_lst[i]) == 1:
+                label_count += 1
+                var_flag == True
+            else:
+                label_count += 1
+                var_flag = True
+                inst_count += 1
+        else:
+            var_flag = True
+            inst_count += 1
+
+
+
+    # Creating dictionary for variables
+    var_dict = {}
+    mem_addr = inst_count
+    line_num = 1
+    for i in init_lst:
+        if i == []:
+            line_num += 1
+            continue
+        if i[0] == 'var':
+            if i[1] in var_dict.keys():
+                errors.varAlreadyExists(line_num)
+            var_dict[i[1]] = bin(mem_addr)[2:]
+            mem_addr += 1
         line_num += 1
-        continue
-    if i[0] == 'var':
-        if i[1] in var_dict.keys():
-            errors.varAlreadyExists(line_num)
-        var_dict[i[1]] = bin(mem_addr)[2:]
-        mem_addr += 1
-    line_num += 1
 
-print(var_dict)
+    print(var_dict)
 
-# Creating dictionary for labels
-label_dict = {}
-mem_addr = 0
-line_num = 1
-for inst in init_lst:
-    if inst == [] or inst[0] == 'var':
+    # Creating dictionary for labels
+    label_dict = {}
+    mem_addr = 0
+    line_num = 1
+    for inst in init_lst:
+        if inst == [] or inst[0] == 'var':
+            line_num += 1
+            continue
+        if inst[0][-1] == ':':
+            if inst[0][:-1] in label_dict.keys():
+                errors.labelAlreadyExists(line_num)
+            if len(inst) == 1:
+                label_dict[inst[0][:-1]] = bin(mem_addr)[2:]
+            else:
+                label_dict[inst[0][:-1]] = bin(mem_addr)[2:]
+                mem_addr += 1
+        else:
+            mem_addr += 1
         line_num += 1
-        continue
-    if inst[0][-1] == ':':
-        if inst[1] in label_dict.keys():
-            errors.labelAlreadyExists(line_num)
-        label_dict[inst[0][:-1]] = bin(mem_addr)[2:]
-    mem_addr += 1
-    line_num += 1
+        print(inst, line_num)
 
-print(label_dict)
-
+    print(label_dict)
+except SystemExit:
+    print('Exiting...')
+except:
+    errors.genError()
 
 
 def typeA(inst, line_num):
@@ -121,18 +135,26 @@ def convert(inst, line_num):
         s = typeF(inst, line_num)
     return s
 
-binary_lst = []
-line_num = 1
-for inst in init_lst:
-    if inst != [] and inst[0] != 'var':
-        if inst[0][-1] == ':':
-            binary_lst.append(convert(inst[1:], line_num))
-        else:
-            binary_lst.append(convert(inst, line_num))
-    line_num += 1
+try:
+    binary_lst = []
+    line_num = 1
+    for inst in init_lst:
+        if inst != [] and inst[0] != 'var':
+            if inst[0][-1] == ':':
+                if len(inst) == 1:
+                    line_num+=1
+                    continue
+                binary_lst.append(convert(inst[1:], line_num))
+            else:
+                binary_lst.append(convert(inst, line_num))
+        line_num += 1
 
-# for i in binary_lst:
-#     print(i)
+    # for i in binary_lst:
+    #     print(i)
 
-for i in binary_lst:
-    sys.stdout.write(i+'\n')
+    for i in binary_lst:
+        sys.stdout.write(i+'\n')
+except SystemExit:
+    print('Exiting...')
+except:
+    errors.genError()

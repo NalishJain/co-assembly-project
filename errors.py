@@ -65,15 +65,18 @@ def hltErrors(lst):
                 
 def check_immediate(immediate, line_num):
     if (not (0 <= immediate <=255)):
-        sys.stdout.write(f"Error: line {line_num}, The value of immediate {immediate} should be integer in range [0, 255]")
+        sys.stdout.write(f"Error: line {line_num}, The value of immediate {immediate} should be integer in range [0, 255]\n")
         sys.exit()
 
 def check_reg(reg, rdict, line_num):
     if reg not in rdict:
-        sys.stdout.write(f"Error: line {line_num}, register {reg} you are trying to access does not exist")
+        sys.stdout.write(f"Error: line {line_num}, register {reg} you are trying to access does not exist\n")
         sys.exit()
 
 def check_opcode(ins, opCode, line_num):
     if ins not in opCode:
-        sys.stdout.write(f"Error: line {line_num}, instruction {ins} does not exist")
+        sys.stdout.write(f"Error: line {line_num}, instruction {ins} does not exist\n")
         sys.exit()
+
+def genError():
+    sys.stdout.write(f'General Syntax Error: something went wrong :( \n')

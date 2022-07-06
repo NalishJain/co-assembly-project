@@ -38,7 +38,7 @@ def hltErrors(lst):
                     sys.exit()
                 else:
                     flag = 1
-                    t = i 
+                    t = i
                     break
             if len(lst[i]) == 2 :
                 if lst[i][1] != "hlt":
@@ -46,9 +46,9 @@ def hltErrors(lst):
                     sys.exit()
                 else:
                     flag = 1
-                    t = i 
+                    t = i
                     break
-            
+
     if flag == 1:
         for i in range(t - 1, -1, -1):
             if lst[i] == []:
@@ -62,7 +62,7 @@ def hltErrors(lst):
                     sys.stdout.write(f'Error at line {i + 1}: Multiple halt instructions present\n')
                     sys.exit()
 
-                
+
 def check_immediate(immediate, line_num):
     if (not (0 <= immediate <=255)):
         sys.stdout.write(f"Error: line {line_num}, The value of immediate {immediate} should be integer in range [0, 255]\n")
@@ -78,5 +78,22 @@ def check_opcode(ins, opCode, line_num):
         sys.stdout.write(f"Error: line {line_num}, instruction {ins} does not exist\n")
         sys.exit()
 
-def genError():
-    sys.stdout.write(f'General Syntax Error: something went wrong :( \n')
+def genError(i):
+    try:
+        sys.stdout.write(f'General Syntax Error at line {i}: something went wrong :( \n')
+        sys.exit()
+    except SystemExit:
+        sys.stdout.write('Exiting...\n')
+        sys.exit()
+    except:
+        sys.stdout.write(f'General Syntax Error: something went wrong :( \n')
+        sys.exit()
+
+
+def tooManyArguments(i, arg_expected, arg_provided):
+    sys.stdout.write(f'Error at line {i}: too many arguments provided ({arg_provided-1}); expected arguments: {arg_expected-1}\n')
+    sys.exit()
+
+def tooFewArguments(i, arg_expected, arg_provided):
+    sys.stdout.write(f'Error at line {i}: too few arguments provided ({arg_provided-1}); expected arguments: {arg_expected-1}\n')
+    sys.exit()

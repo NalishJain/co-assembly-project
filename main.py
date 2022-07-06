@@ -4,11 +4,12 @@ import errors
 
 # all errors should be defined in errors.py to distinguish them from normal util funcs
 
+line_num = 0
 try:
     assembly_input = sys.stdin.read().split('\n')
 
     init_lst = [i.split() for i in assembly_input]
-    print(init_lst)
+    # print(init_lst)
 
 
     errors.hltErrors(init_lst)
@@ -53,7 +54,7 @@ try:
             mem_addr += 1
         line_num += 1
 
-    print(var_dict)
+    # print(var_dict)
 
     # Creating dictionary for labels
     label_dict = {}
@@ -74,47 +75,77 @@ try:
         else:
             mem_addr += 1
         line_num += 1
-        print(inst, line_num)
+        # print(inst, line_num)
 
-    print(label_dict)
+    # print(label_dict)
 except SystemExit:
     print('Exiting...')
 except:
-    errors.genError()
+    errors.genError(line_num)
 
 
 def typeA(inst, line_num):
+    inst_len = 4
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     s = get_opcode(inst[0], line_num) + "00" + get_reg(inst[1], line_num) + get_reg(inst[2], line_num) + get_reg(inst[3], line_num)
     return s
 
 def typeB(inst, line_num):
+    inst_len = 3
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movi", line_num)
     immediate = bin(int(inst[2][1:]))[2:]
     errors.check_immediate(int(inst[2][1:]), line_num)
     return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(immediate))) + immediate
 
 def typeC(inst, line_num):
+    inst_len = 3
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movr", line_num)
     if inst[0] == "mov" and inst[1] == "FLAGS":
         return opcode + "0"*5 + get_reg(inst[1], line_num) + "111" #FLAGS at 111
     return opcode + "0"*5 + get_reg(inst[1], line_num) + get_reg(inst[2], line_num)
 
 def typeD(inst, line_num):
+    inst_len = 3
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num)
     errors.checkVariable(inst, line_num, var_dict)
     return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(var_dict[inst[2]]))) + var_dict[inst[2]]
 
 def typeE(inst, line_num):
+    inst_len = 2
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num)
     errors.checkLabel(inst, line_num, label_dict)
     return opcode + "000" + ("0"*(8-len(label_dict[inst[1]]))) + label_dict[inst[1]]
 
 def typeF(inst, line_num):
+    inst_len = 1
+    if len(inst) > inst_len:
+        errors.tooManyArguments(line_num, inst_len, len(inst))
+    if len(inst) < inst_len:
+        errors.tooFewArguments(line_num, inst_len, len(inst))
     s = get_opcode(inst[0], line_num) + "00000000000"
     return s
 
 def convert(inst, line_num):
-    print(line_num)
+    # print(line_num)
     if (inst[0] == "mov"):
         if '$' in inst[2]:
             s = typeB(inst, line_num)
@@ -157,4 +188,4 @@ try:
 except SystemExit:
     print('Exiting...')
 except:
-    errors.genError()
+    errors.genError(line_num)

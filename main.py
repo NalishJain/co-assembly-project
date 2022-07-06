@@ -80,6 +80,7 @@ try:
     # print(label_dict)
 except SystemExit:
     print('Exiting...')
+    sys.exit()
 except:
     errors.genError(line_num)
 
@@ -187,5 +188,6 @@ try:
         sys.stdout.write(i+'\n')
 except SystemExit:
     print('Exiting...')
+    sys.exit()
 except:
     errors.genError(line_num)

@@ -28,18 +28,11 @@ def labelAlreadyExists(line_num):
 
 
 def hltErrors(lst):
+    flag = 0
     for i in range(len(lst) - 1, -1, -1):
         if lst[i] == []:
             continue
         if lst[i] != []:
-            if len(lst[i]) == 1 :
-                if lst[i][0] != "hlt":
-                    sys.stdout.write(f'Error at line {i + 1}: Halt instruction not present at the end\n')
-                    sys.exit()
-                else:
-                    flag = 1
-                    t = i
-                    break
             if len(lst[i]) == 2 :
                 if lst[i][1] != "hlt":
                     sys.stdout.write(f'Error at line {i + 1}: Halt instruction not present at the end\n')
@@ -48,6 +41,15 @@ def hltErrors(lst):
                     flag = 1
                     t = i
                     break
+            else:
+                if lst[i][0] != "hlt":
+                    sys.stdout.write(f'Error at line {i + 1}: Halt instruction not present at the end\n')
+                    sys.exit()
+                else:
+                    flag = 1
+                    t = i
+                    break
+
 
     if flag == 1:
         for i in range(t - 1, -1, -1):

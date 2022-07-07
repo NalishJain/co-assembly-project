@@ -113,7 +113,7 @@ def typeC(inst, line_num):
         errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movr", line_num)
     if inst[0] == "mov" and inst[1] == "FLAGS":
-        return opcode + "0"*5 + get_reg(inst[1], line_num) + "111" #FLAGS at 111
+        return opcode + "0"*5 + "111" + get_reg(inst[2], line_num) #FLAGS at 111
     return opcode + "0"*5 + get_reg(inst[1], line_num) + get_reg(inst[2], line_num)
 
 def typeD(inst, line_num):

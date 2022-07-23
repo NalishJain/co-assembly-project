@@ -82,7 +82,10 @@ def execute_typeC(Instruction):
     reg2 = Instruction[13:16]
     inst = Instruction[0:5]
     if inst == "10011":
-        rdict[reg2] = rdict[reg1]
+        if reg1 == "111":
+            rdict[reg2] = int(rdict["111"], 2)
+        else:
+            rdict[reg2] = rdict[reg1]
     elif inst == "10111":
         rdict["000"] = int(rdict[reg1] / rdict[reg2])
         rdict["001"] = rdict[reg1] % rdict[reg2]

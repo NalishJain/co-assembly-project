@@ -34,6 +34,7 @@ def execute_typeA(Instruction):
             rdict[Instruction[13:16]] = resA
         else:
             rdict["111"][0] = '1'
+            rdict[Instruction[13:16]] = resA%(2**16)
     elif  Instruction[0:5] == "10000":
         resA = rdict[Instruction[7:10]] - rdict[Instruction[10:13]]
         if resA >= 0:
@@ -46,7 +47,8 @@ def execute_typeA(Instruction):
         if resA < (2**16):
             rdict[Instruction[13:16]] = resA
         else:
-            rdict["111"][0] = '1' 
+            rdict["111"][0] = '1'
+            rdict[Instruction[13:16]] = resA%(2**16) 
 
     elif  Instruction[0:5] == "11010":
         resA = (rdict[Instruction[7:10]])^(rdict[Instruction[10:13]]) 

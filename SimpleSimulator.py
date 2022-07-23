@@ -124,6 +124,13 @@ def ExecuteInstruction(Instruction):
         execute_typeC(Instruction)
     elif Instruction[0:5] in ["10101", "10100"]:
         # TypeD
+        # store
+        if Instruction[0:5] == "10101":
+            Memory[convertToDecimal(Instruction[8:16])] = rdict[Instruction[5:8]]
+        # load
+        elif Instruction[0:5] == "10100":
+            rdict[Instruction[5:8]] = Memory[convertToDecimal(Instruction[8:16])]
+
     elif Instruction[0:5] in ["01111", "01101", "11111", "01100"]:
         # TypeE
         # je

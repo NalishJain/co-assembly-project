@@ -41,7 +41,7 @@ def execute_typeA(Instruction):
     rdict["111"] = "0000"
 
     if  Instruction[0:5] == "10000":
-        resA = rdict[Instruction[7:10]] + rdict[Instruction[10:13]] 
+        resA = rdict[Instruction[7:10]] + rdict[Instruction[10:13]]
         if resA < (2**16):
             rdict[Instruction[13:16]] = resA
         else:
@@ -52,27 +52,27 @@ def execute_typeA(Instruction):
         if resA >= 0:
             rdict[Instruction[13:16]] = resA
         else:
-            rdict["111"][0] = '1'  
+            rdict["111"][0] = '1'
             rdict[Instruction[13:16]] = 0
     elif  Instruction[0:5] == "10110":
-        resA = (rdict[Instruction[7:10]])*(rdict[Instruction[10:13]]) 
+        resA = (rdict[Instruction[7:10]])*(rdict[Instruction[10:13]])
         if resA < (2**16):
             rdict[Instruction[13:16]] = resA
         else:
             rdict["111"][0] = '1'
-            rdict[Instruction[13:16]] = resA%(2**16) 
+            rdict[Instruction[13:16]] = resA%(2**16)
 
     elif  Instruction[0:5] == "11010":
-        resA = (rdict[Instruction[7:10]])^(rdict[Instruction[10:13]]) 
+        resA = (rdict[Instruction[7:10]])^(rdict[Instruction[10:13]])
         rdict[Instruction[13:16]] = resA
 
     elif  Instruction[0:5] == "11011":
-        resA = (rdict[Instruction[7:10]])|(rdict[Instruction[10:13]]) 
+        resA = (rdict[Instruction[7:10]])|(rdict[Instruction[10:13]])
         rdict[Instruction[13:16]] = resA
 
     else:
-        resA = (rdict[Instruction[7:10]])&(rdict[Instruction[10:13]]) 
-        rdict[Instruction[13:16]] = resA 
+        resA = (rdict[Instruction[7:10]])&(rdict[Instruction[10:13]])
+        rdict[Instruction[13:16]] = resA
 
 def execute_typeB(Instruction):
     # reset flags
@@ -128,23 +128,24 @@ def ExecuteInstruction(Instruction):
         # TypeE
         # je
         if Instruction[0:5] == "01111":
-            if FlagE = 1:
+            if rdict["111"][-1] == :
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jgt
         elif Instruction[0:5] == "01101":
-            if FlagG = 1:
+            if rdict["111"][-2]:
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jlt
         elif Instruction[0:5] == "01100":
-            if FlagL = 1:
+            if rdict["111"][-3]:
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jmp
         elif Instruction[0:5] == "11111":
             PC = convertToDecimal(Instruction[8:16]) - 1
 
     elif Instruction[0:5] == "01010":
-        global halted = True
+        halted = True
     else:
+        pass
 
 
 while (not halted):
@@ -162,8 +163,8 @@ while (not halted):
 
 for i in range(256):
     sys.stdout.write(Memory[i]+'\n')
-    
-    
+
+
 # initialize(MEM); // Load memory from stdin
 # PC = 0; // Start from the first instruction
 # halted = false;

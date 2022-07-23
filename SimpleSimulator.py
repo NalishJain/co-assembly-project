@@ -24,7 +24,6 @@ PC = 0
 halted = False
 
 
-
 def execute_typeA(Instruction):
 
     rdict["111"] = "0000"
@@ -64,6 +63,7 @@ def execute_typeA(Instruction):
 def execute_typeB(Instruction):
     # reset flags
     rdict["111"] = "0000"
+
     reg = Instruction[5:8]
     imm = int(Instruction[8:], 2)
     inst = Instruction[0:5]
@@ -77,6 +77,7 @@ def execute_typeB(Instruction):
 def execute_typeC(Instruction):
     # reset flags
     rdict["111"] = "0000"
+
     reg1 = Instruction[10:13]
     reg2 = Instruction[13:16]
     inst = Instruction[0:5]

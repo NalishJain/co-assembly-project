@@ -153,7 +153,7 @@ def convert(inst, line_num):
         else:
             s = typeC(inst, line_num)
 
-    elif (get_opcode(inst[0], line_num) in ["10000","10001","10110","11010" ,"11011","11100"]):
+    elif (get_opcode(inst[0], line_num) in ["10000", "10001", "10110", "11010" , "11011", "11100", "00000", "00001"]):
         s = typeA(inst, line_num)
     elif (get_opcode(inst[0], line_num) in ["11000", "11001"]):
         s = typeB(inst, line_num)

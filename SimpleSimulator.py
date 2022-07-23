@@ -135,15 +135,15 @@ def ExecuteInstruction(Instruction):
         # TypeE
         # je
         if Instruction[0:5] == "01111":
-            if rdict["111"][-1] == :
+            if rdict["111"][-1] == '1':
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jgt
         elif Instruction[0:5] == "01101":
-            if rdict["111"][-2]:
+            if rdict["111"][-2] == '1':
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jlt
         elif Instruction[0:5] == "01100":
-            if rdict["111"][-3]:
+            if rdict["111"][-3] == '1':
                 PC = convertToDecimal(Instruction[8:16]) - 1
         # jmp
         elif Instruction[0:5] == "11111":
@@ -158,7 +158,7 @@ def ExecuteInstruction(Instruction):
 while (not halted):
     Inst = Memory[PC]
     sys.stdout.write('0'*(8-len(bin(PC)[2:])) + bin(PC)[2:] + ' ')
-    PC = ExecuteInstruction(Inst)
+    ExecuteInstruction(Inst)
 
 
     for i in rdict:

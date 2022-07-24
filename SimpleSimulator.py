@@ -13,13 +13,13 @@ rdict = {
         }
 
 assembly_input = sys.stdin.read().split('\n')
-init_lst = [i for i in assembly_input]
+init_lst = [i for i in assembly_input if i != '']
 Memory = []
 
 for i in range(256):
     Memory.append("0000000000000000")
 
-for i in range(len(init_lst) - 1):
+for i in range(len(init_lst)):
     Memory[i] = init_lst[i]
 
 PC = 0

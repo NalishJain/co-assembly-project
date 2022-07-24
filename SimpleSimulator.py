@@ -9,7 +9,7 @@ rdict = {
             "100": 0,
             "101": 0,
             "110": 0,
-            "111": "0000"
+            "111": ['0','0','0','0']
         }
 
 assembly_input = sys.stdin.read().split('\n')
@@ -19,7 +19,7 @@ Memory = []
 for i in range(256):
     Memory.append("0000000000000000")
 
-for i in range(len(init_lst)):
+for i in range(len(init_lst) - 1):
     Memory[i] = init_lst[i]
 
 PC = 0
@@ -27,18 +27,13 @@ halted = False
 
 
 def convertToDecimal(binary):
-    total = 0
-    power = 0
-    while binary != '':
-        total += int(binary[len(binary)-1]) * power
-        power += 1
-        binary = binary[:len(binary)-1]
-    return total
+    d = int(binary,2)
+    return d
 
 
 def execute_typeA(Instruction):
 
-    rdict["111"] = "0000"
+    rdict["111"] = ['0','0','0','0']
 
     if  Instruction[0:5] == "10000":
         resA = rdict[Instruction[7:10]] + rdict[Instruction[10:13]]
@@ -76,7 +71,7 @@ def execute_typeA(Instruction):
 
 def execute_typeB(Instruction):
     # reset flags
-    rdict["111"] = "0000"
+    rdict["111"] = ['0','0','0','0']
 
     reg = Instruction[5:8]
     imm = int(Instruction[8:], 2)
@@ -90,28 +85,31 @@ def execute_typeB(Instruction):
 
 def execute_typeC(Instruction):
     # reset flags
-    rdict["111"] = "0000"
+
 
     reg1 = Instruction[10:13]
     reg2 = Instruction[13:16]
     inst = Instruction[0:5]
     if inst == "10011":
         if reg1 == "111":
-            rdict[reg2] = int(rdict["111"], 2)
+            rdict[reg2] = int(''.join(rdict["111"]), 2)
         else:
             rdict[reg2] = rdict[reg1]
-    elif inst == "10111":
+        
+    rdict["111"] = ['0','0','0','0']
+
+    if inst == "10111":
         rdict["000"] = int(rdict[reg1] / rdict[reg2])
         rdict["001"] = rdict[reg1] % rdict[reg2]
     elif inst == "11101":
         rdict[reg2] = ~rdict[reg1]
     elif inst == "11110":
         if rdict[reg1] < rdict[reg2]:
-            rdict["111"][-3] = 1
+            rdict["111"][-3] = '1'
         elif rdict[reg1] > rdict[reg2]:
-            rdict["111"][-2] = 1
+            rdict["111"][-2] = '1'
         elif rdict[reg1] == rdict[reg2]:
-            rdict["111"][-1] = 1
+            rdict["111"][-1] = '1'
 
 def ExecuteInstruction(Instruction):
     global PC
@@ -126,10 +124,11 @@ def ExecuteInstruction(Instruction):
         # TypeD
         # store
         if Instruction[0:5] == "10101":
-            Memory[convertToDecimal(Instruction[8:16])] = rdict[Instruction[5:8]]
+            Memory[convertToDecimal(Instruction[8:16])] = '0'*(16-len(bin(rdict[Instruction[5:8]])[2:])) + bin(rdict[Instruction[5:8]])[2:]
         # load
         elif Instruction[0:5] == "10100":
-            rdict[Instruction[5:8]] = Memory[convertToDecimal(Instruction[8:16])]
+            rdict[Instruction[5:8]] = convertToDecimal(Memory[convertToDecimal(Instruction[8:16])])
+        # rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] in ["01111", "01101", "11111", "01100"]:
         # TypeE
@@ -148,11 +147,13 @@ def ExecuteInstruction(Instruction):
         # jmp
         elif Instruction[0:5] == "11111":
             PC = convertToDecimal(Instruction[8:16]) - 1
+        # rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] == "01010":
         halted = True
     else:
         pass
+    PC = PC + 1
 
 
 while (not halted):
@@ -165,7 +166,7 @@ while (not halted):
         if i != "111":
             sys.stdout.write('0'*(16-len(bin(rdict[i])[2:])) + bin(rdict[i])[2:] + ' ')
         else :
-            sys.stdout.write("0"*12 + rdict[i] + '\n')
+            sys.stdout.write("0"*12 + ''.join(rdict[i]) + '\n')
 
 
 for i in range(256):

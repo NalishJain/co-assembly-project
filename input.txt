@@ -1,32 +1,13 @@
-
 var xyz
-
 var abc
-
-je bye
-
-
-jmp hello
-jlt label
-
-cmp R4 FLAGS
-welp:
-ls R4 $2
-
-
-and R6 R4 R2
-label: st R1 xyz
-
-hello:
-
-add R1 R2 R3
-mov R5 $43
-
-mov R1 FLAGS
-ld R1 xyz
-
-jgt label
-
-bye: st R3 abc
-
+l1: mov R0 $25
+mov R1 $99
+mov FLAGS R5
+l_2:
+	st R0 xyz
+	add R0 R0 R0
+	ld R3 abc
+    cmp R1 R0
+	je l1
+	jgt l_2
 hlt

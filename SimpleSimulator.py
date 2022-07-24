@@ -1,4 +1,7 @@
 import sys
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import numpy as np
 # Flag variables
 
 rdict = {
@@ -15,6 +18,8 @@ rdict = {
 assembly_input = sys.stdin.read().split('\n')
 init_lst = [i for i in assembly_input if i != '']
 Memory = []
+memory_access_trace = []
+timestep = 1
 
 for i in range(256):
     Memory.append("0000000000000000")
@@ -125,9 +130,12 @@ def ExecuteInstruction(Instruction):
         # store
         if Instruction[0:5] == "10101":
             Memory[convertToDecimal(Instruction[8:16])] = '0'*(16-len(bin(rdict[Instruction[5:8]])[2:])) + bin(rdict[Instruction[5:8]])[2:]
+            memory_access_trace.append(['0'*(16-len(bin(convertToDecimal(Instruction[8:16]))[2:])) + bin(convertToDecimal(Instruction[8:16]))[2:], timestep])
         # load
         elif Instruction[0:5] == "10100":
             rdict[Instruction[5:8]] = convertToDecimal(Memory[convertToDecimal(Instruction[8:16])])
+            memory_access_trace.append(['0'*(16-len(bin(convertToDecimal(Instruction[8:16]))[2:])) + bin(convertToDecimal(Instruction[8:16]))[2:], timestep])
+
         # rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] in ["01111", "01101", "11111", "01100"]:
@@ -158,6 +166,7 @@ def ExecuteInstruction(Instruction):
 
 while (not halted):
     Inst = Memory[PC]
+    memory_access_trace.append(['0'*(16-len(bin(PC)[2:])) + bin(PC)[2:], timestep])
     sys.stdout.write('0'*(8-len(bin(PC)[2:])) + bin(PC)[2:] + ' ')
     ExecuteInstruction(Inst)
 
@@ -168,10 +177,21 @@ while (not halted):
         else :
             sys.stdout.write("0"*12 + ''.join(rdict[i]) + '\n')
 
+    timestep += 1
 
 for i in range(256):
     sys.stdout.write(Memory[i]+'\n')
 
+
+plot_memory_trace = True
+if plot_memory_trace:
+    memory_access_trace = np.array(memory_access_trace)
+    fig, ax = plt.subplots()
+    ax.yaxis.set_major_formatter(FuncFormatter("{:08b}".format))
+    plt.xlabel('Cycle number')
+    plt.title('Memory trace: Address accessed vs cycle')
+    plt.scatter(memory_access_trace[:,1], memory_access_trace[:,0])
+    plt.show()
 
 # initialize(MEM); // Load memory from stdin
 # PC = 0; // Start from the first instruction

@@ -101,8 +101,27 @@ def typeB(inst, line_num):
     if len(inst) < inst_len:
         errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movi", line_num)
-    immediate = bin(int(inst[2][1:]))[2:]
-    errors.check_immediate(int(inst[2][1:]), line_num)
+    if inst[0] == "movf":
+        exp = 0
+        num = float(inst[2][1:])
+        while num/2>1:
+            num = num/2
+            exp += 1
+        while num*2 < 1:
+            num = num*2
+            exp -= 1
+
+        exp_bin = bin(exp)[2:]
+        mantissa = bin(int(str(num)[2:]))[2:]
+        if len(exp_bin) > 3 or len(mantissa)>5:
+            sys.stdout.write(f'Error at line {line_num}: Cannot represent given float in 8-bits\n')
+            sys.exit()
+        
+        immediate = exp_bin.zfill(3) + mantissa.zfill(5)
+        
+    else:    
+        immediate = bin(int(inst[2][1:]))[2:]
+        errors.check_immediate(int(inst[2][1:]), line_num)
     return opcode + get_reg(inst[1], line_num) + ("0"*(8-len(immediate))) + immediate
 
 def typeC(inst, line_num):
@@ -155,7 +174,7 @@ def convert(inst, line_num):
 
     elif (get_opcode(inst[0], line_num) in ["10000", "10001", "10110", "11010" , "11011", "11100", "00000", "00001"]):
         s = typeA(inst, line_num)
-    elif (get_opcode(inst[0], line_num) in ["11000", "11001"]):
+    elif (get_opcode(inst[0], line_num) in ["11000", "11001","00010"]):
         s = typeB(inst, line_num)
     elif (get_opcode(inst[0], line_num) in ["10111", "11101", "11110"]):
         s = typeC(inst, line_num)

@@ -35,6 +35,9 @@ def convertToDecimal(binary):
     d = int(binary,2)
     return d
 
+def BinaryfloatToDecimal(exp, matissa):
+    mand = (2**exp)*( 1 + int(matissa[0])*(2**(-1)) + int(matissa[1])*(2**(-2)) + int(matissa[2])*(2**(-3)) + int(matissa[3])*(2**(-4)) + int(matissa[4])*(2**(-5)))
+    return mand
 
 def execute_typeA(Instruction):
 
@@ -70,6 +73,53 @@ def execute_typeA(Instruction):
         resA = (rdict[Instruction[7:10]])|(rdict[Instruction[10:13]])
         rdict[Instruction[13:16]] = resA
 
+    elif  Instruction[0:5] == "00000":
+        resB = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])[-8::-1]
+        resC = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])[-8::-1]
+
+        resBexp = convertToDecimal(resB[0:3])
+        resBmantissa = resB[3:8]
+        resCexp = convertToDecimal(resC[0:3])
+        resCmantissa = resC[3:8]
+
+        resBfloat = BinaryfloatToDecimal(resBexp, resBmantissa)
+        resCfloat = BinaryfloatToDecimal(resCexp, resCmantissa)
+
+        resAfloat = resBfloat + resCfloat
+
+        if (resAfloat <= 252.0):
+
+            # ConversionFunction
+
+        else:
+            rdict["111"][0] = '1'
+            rdict[Instruction[13:16]] = convertToDecimal("0000000011111111")
+
+    elif  Instruction[0:5] == "00001":
+
+        resB = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])[-8::-1]
+        resC = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])[-8::-1]
+
+        resBexp = convertToDecimal(resB[0:3])
+        resBmantissa = resB[3:8]
+        resCexp = convertToDecimal(resC[0:3])
+        resCmantissa = resC[3:8]
+
+        resBfloat = BinaryfloatToDecimal(resBexp, resBmantissa)
+        resCfloat = BinaryfloatToDecimal(resCexp, resCmantissa)
+
+        resAfloat = resBfloat - resCfloat
+
+
+        if (resAfloat >= 0):
+             # ConversionFunction
+
+
+        else:
+            rdict["111"][0] = '1'
+            rdict[Instruction[13:16]] = convertToDecimal("0000 000000000000")       
+
+    
     else:
         resA = (rdict[Instruction[7:10]])&(rdict[Instruction[10:13]])
         rdict[Instruction[13:16]] = resA
@@ -119,7 +169,7 @@ def execute_typeC(Instruction):
 def ExecuteInstruction(Instruction):
     global PC
     global halted
-    if Instruction[0:5] in ["10000","10001","10110","11010" ,"11011","11100"]:
+    if Instruction[0:5] in ["10000","10001", "10110","11010" ,"11011", "11100", "00000", "00001"]:
         execute_typeA(Instruction)
     elif Instruction[0:5] in ["11000","11001", "10010"]:
         execute_typeB(Instruction)

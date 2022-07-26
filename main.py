@@ -38,7 +38,6 @@ try:
             inst_count += 1
 
 
-
     # Creating dictionary for variables
     var_dict = {}
     mem_addr = inst_count
@@ -102,6 +101,9 @@ def typeB(inst, line_num):
         errors.tooFewArguments(line_num, inst_len, len(inst))
     opcode = get_opcode(inst[0], line_num) if (inst[0]!="mov") else get_opcode("movi", line_num)
     if inst[0] == "movf":
+        if '.' not in inst[2][1:]:
+            sys.stdout.write(f'Error at line {line_num}: Requires a float\n')
+            sys.exit()
         exp = 0
         num = float(inst[2][1:])
         while num/2>1:
@@ -112,12 +114,17 @@ def typeB(inst, line_num):
             exp -= 1
 
         exp_bin = bin(exp)[2:]
-        mantissa = bin(int(str(num)[2:]))[2:]
-        if len(exp_bin) > 3 or len(mantissa)>5:
+
+        decimal = float(str(num)[1:])
+        mantissa = ""
+        while len(mantissa)<5 and decimal != 0:
+            mantissa += str(int((decimal*2) // 1))
+            decimal = (decimal*2) % 1
+        
+        if len(exp_bin) > 3 or len(mantissa)>5 or decimal != 0:
             sys.stdout.write(f'Error at line {line_num}: Cannot represent given float in 8-bits\n')
             sys.exit()
-        
-        immediate = exp_bin.zfill(3) + mantissa.zfill(5)
+        immediate = '0' * (3-len(exp_bin)) + exp_bin + mantissa + '0' * (5-len(mantissa))
         
     else:    
         immediate = bin(int(inst[2][1:]))[2:]

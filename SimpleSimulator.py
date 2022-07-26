@@ -89,11 +89,44 @@ def execute_typeA(Instruction):
             rdict[Instruction[13:16]] = resA%(2**16)
 
     elif  Instruction[0:5] == "11010":
-        resA = (rdict[Instruction[7:10]])^(rdict[Instruction[10:13]])
+        r1b = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])
+        r1c = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])
+        r1a = ''
+
+        for i in range(0,16):
+            if (r1b[i] == '0' and r1c[i] == '0') or  (r1b[i] == '1' and r1c[i] == '1'):
+                r1a = r1a + '0'
+            else:
+                r1a = r1a + '1'   
+        
+        resA = convertToDecimal(r1a)
         rdict[Instruction[13:16]] = resA
 
     elif  Instruction[0:5] == "11011":
-        resA = (rdict[Instruction[7:10]])|(rdict[Instruction[10:13]])
+        r1b = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])
+        r1c = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])
+        r1a = ''
+        
+        for i in range(0,16):
+            if r1b[i] == '0' and r1c[i] == '0':
+                r1a = r1a + '0'
+            else:
+                r1a = r1a + '1'    
+
+        resA = convertToDecimal(r1a)
+        rdict[Instruction[13:16]] = resA
+    
+    elif Instruction[0:5] == "11100":
+        r1b = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])
+        r1c = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])
+        r1a = ''
+        for i in range(0,16):
+            if r1b[i] == '1' and r1c[i] == '1':
+                r1a = r1a + '1'
+            else:
+                r1a = r1a + '0'    
+
+        resA = convertToDecimal(r1a)
         rdict[Instruction[13:16]] = resA
 
     elif  Instruction[0:5] == "00000":
@@ -141,9 +174,7 @@ def execute_typeA(Instruction):
             rdict[Instruction[13:16]] = convertToDecimal("0000000000000000")       
 
     
-    else:
-        resA = (rdict[Instruction[7:10]])&(rdict[Instruction[10:13]])
-        rdict[Instruction[13:16]] = resA
+
 
 def execute_typeB(Instruction):
     # reset flags

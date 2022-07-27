@@ -1,13 +1,10 @@
-var xyz
-var abc
+
 l1: mov R0 $25
-mov R1 $99
-mov FLAGS R5
-l_2:
-	st R0 xyz
-	add R0 R0 R0
-	ld R3 abc
-    cmp R1 R0
-	je l1
-	jgt l_2
+
+mov R1 $83
+mov R2 $37
+
+or R1 R2 R3
+and R1 R2 R3
+xor R1 R2 R3
 hlt

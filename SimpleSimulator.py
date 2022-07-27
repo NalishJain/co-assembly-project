@@ -211,7 +211,9 @@ def execute_typeC(Instruction):
         rdict["000"] = int(rdict[reg1] / rdict[reg2])
         rdict["001"] = rdict[reg1] % rdict[reg2]
     elif inst == "11101":
-        rdict[reg2] = ~rdict[reg1]
+        binary = ''.join('1' if x == '0' else '0' for x in bin(rdict[reg1])[2:])
+        binary = '1'*(16-len(binary)) + binary
+        rdict[reg2] = int(binary, 2)
     elif inst == "11110":
         if rdict[reg1] < rdict[reg2]:
             rdict["111"][-3] = '1'

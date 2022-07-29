@@ -55,7 +55,7 @@ def DecimalToBinary(num):
     while len(mantissa)<5 and decimal != 0:
         mantissa += str(int((decimal*2) // 1))
         decimal = (decimal*2) % 1
-    
+
     if len(exp_bin) > 3 or len(mantissa)>5 or decimal != 0:
         sys.stdout.write(f'Error at line {line_num}: Cannot represent given float in 8-bits\n')
         sys.exit()
@@ -97,8 +97,8 @@ def execute_typeA(Instruction):
             if (r1b[i] == '0' and r1c[i] == '0') or  (r1b[i] == '1' and r1c[i] == '1'):
                 r1a = r1a + '0'
             else:
-                r1a = r1a + '1'   
-        
+                r1a = r1a + '1'
+
         resA = convertToDecimal(r1a)
         rdict[Instruction[13:16]] = resA
 
@@ -106,16 +106,16 @@ def execute_typeA(Instruction):
         r1b = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])
         r1c = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])
         r1a = ''
-        
+
         for i in range(0,16):
             if r1b[i] == '0' and r1c[i] == '0':
                 r1a = r1a + '0'
             else:
-                r1a = r1a + '1'    
+                r1a = r1a + '1'
 
         resA = convertToDecimal(r1a)
         rdict[Instruction[13:16]] = resA
-    
+
     elif Instruction[0:5] == "11100":
         r1b = ('0'*(16-len(bin(rdict[Instruction[7:10]])[2:])) + bin(rdict[Instruction[7:10]])[2:])
         r1c = ('0'*(16-len(bin(rdict[Instruction[10:13]])[2:])) + bin(rdict[Instruction[10:13]])[2:])
@@ -124,7 +124,7 @@ def execute_typeA(Instruction):
             if r1b[i] == '1' and r1c[i] == '1':
                 r1a = r1a + '1'
             else:
-                r1a = r1a + '0'    
+                r1a = r1a + '0'
 
         resA = convertToDecimal(r1a)
         rdict[Instruction[13:16]] = resA
@@ -171,9 +171,9 @@ def execute_typeA(Instruction):
 
         else:
             rdict["111"][0] = '1'
-            rdict[Instruction[13:16]] = convertToDecimal("0000000000000000")       
+            rdict[Instruction[13:16]] = convertToDecimal("0000000000000000")
 
-    
+
 
 
 def execute_typeB(Instruction):
@@ -190,7 +190,7 @@ def execute_typeB(Instruction):
     elif inst == "10010":
         rdict[reg] = imm
     elif inst == "00010":
-        rdict[reg] = imm    
+        rdict[reg] = imm
 
 def execute_typeC(Instruction):
     # reset flags
@@ -204,7 +204,7 @@ def execute_typeC(Instruction):
             rdict[reg2] = int(''.join(rdict["111"]), 2)
         else:
             rdict[reg2] = rdict[reg1]
-        
+
     rdict["111"] = ['0','0','0','0']
 
     if inst == "10111":
@@ -242,7 +242,7 @@ def ExecuteInstruction(Instruction):
             rdict[Instruction[5:8]] = convertToDecimal(Memory[convertToDecimal(Instruction[8:16])])
             memory_access_trace.append(['0'*(16-len(bin(convertToDecimal(Instruction[8:16]))[2:])) + bin(convertToDecimal(Instruction[8:16]))[2:], timestep])
 
-        # rdict["111"] = ['0','0','0','0']
+        rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] in ["01111", "01101", "11111", "01100"]:
         # TypeE
@@ -261,7 +261,7 @@ def ExecuteInstruction(Instruction):
         # jmp
         elif Instruction[0:5] == "11111":
             PC = convertToDecimal(Instruction[8:16]) - 1
-        # rdict["111"] = ['0','0','0','0']
+        rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] == "01010":
         halted = True

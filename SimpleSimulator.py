@@ -73,7 +73,7 @@ def execute_typeA(Instruction):
         else:
             rdict["111"][0] = '1'
             rdict[Instruction[13:16]] = resA%(2**16)
-    elif  Instruction[0:5] == "10000":
+    elif  Instruction[0:5] == "10001":
         resA = rdict[Instruction[7:10]] - rdict[Instruction[10:13]]
         if resA >= 0:
             rdict[Instruction[13:16]] = resA
@@ -264,6 +264,7 @@ def ExecuteInstruction(Instruction):
         rdict["111"] = ['0','0','0','0']
 
     elif Instruction[0:5] == "01010":
+        rdict["111"] = ['0','0','0','0']
         halted = True
     else:
         pass

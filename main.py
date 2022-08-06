@@ -39,7 +39,7 @@ try:
 
 
     # Creating dictionary for variables
-    if inst_count >= 256:
+    if inst_count > 256:
         errors.memOverflow()
     var_dict = {}
     mem_addr = inst_count
@@ -54,7 +54,7 @@ try:
             var_dict[i[1]] = bin(mem_addr)[2:]
             mem_addr += 1
         line_num += 1
-    if mem_addr >= 256:
+    if mem_addr > 256:
         errors.memOverflow()
 
     # print(var_dict)

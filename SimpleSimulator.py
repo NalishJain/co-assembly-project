@@ -187,9 +187,11 @@ def execute_typeB(Instruction):
     imm = int(Instruction[8:], 2)
     inst = Instruction[0:5]
     if inst == "11000":
-        rdict[reg] = rdict[reg] >> imm
+        bin_val = ('0'*(16-len(bin(rdict[reg])[2:])) + bin(rdict[reg])[2:])
+        rdict[reg] = convertToDecimal('0'*imm + bin_val[:-imm])        
     elif inst == "11001":
-        rdict[reg] = rdict[reg] << imm
+        bin_val = ('0'*(16-len(bin(rdict[reg])[2:])) + bin(rdict[reg])[2:])
+        rdict[reg] = convertToDecimal(bin_val[imm:] + '0'*imm)
     elif inst == "10010":
         rdict[reg] = imm
     elif inst == "00010":

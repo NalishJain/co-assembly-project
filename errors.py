@@ -99,3 +99,7 @@ def tooManyArguments(i, arg_expected, arg_provided):
 def tooFewArguments(i, arg_expected, arg_provided):
     sys.stdout.write(f'Error at line {i}: too few arguments provided ({arg_provided-1}); expected arguments: {arg_expected-1}\n')
     sys.exit()
+
+def memOverflow():
+    sys.stdout.write("Error: Memory overflow - too many instructions and/or variables provided.\n")
+    sys.exit()

@@ -104,11 +104,13 @@ def typeB(inst, line_num):
         if '.' not in inst[2][1:]:
             sys.stdout.write(f'Error at line {line_num}: Requires a float\n')
             sys.exit()
+        exp = 0
+        num = float(inst[2][1:])
+
         if(num < 1 or num > 252):
             sys.stdout.write(f'Error at line {line_num}: Float out of range\n')
             sys.exit()
-        exp = 0
-        num = float(inst[2][1:])
+            
         while num/2>1:
             num = num/2
             exp += 1

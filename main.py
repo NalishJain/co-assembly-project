@@ -104,6 +104,9 @@ def typeB(inst, line_num):
         if '.' not in inst[2][1:]:
             sys.stdout.write(f'Error at line {line_num}: Requires a float\n')
             sys.exit()
+        if(num < 1 or num > 252):
+            sys.stdout.write(f'Error at line {line_num}: Float out of range\n')
+            sys.exit()
         exp = 0
         num = float(inst[2][1:])
         while num/2>1:
@@ -112,7 +115,8 @@ def typeB(inst, line_num):
         while num*2 < 1:
             num = num*2
             exp -= 1
-
+        if num/2 == 1:
+            exp = 1 
         exp_bin = bin(exp)[2:]
 
         decimal = float(str(num)[1:])

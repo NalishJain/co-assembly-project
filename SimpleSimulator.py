@@ -41,12 +41,17 @@ def BinaryfloatToDecimal(exp, matissa):
 
 def DecimalToBinary(num):
     exp = 0
+    if(num < 1 or num > 252):
+        sys.stdout.write('Error number out of range\n')
+        sys.exit()  
     while num/2>1:
         num = num/2
         exp += 1
     while num*2 < 1:
         num = num*2
         exp -= 1
+    if num/2 == 1:
+        exp = 1 
 
     exp_bin = bin(exp)[2:]
 
@@ -57,7 +62,7 @@ def DecimalToBinary(num):
         decimal = (decimal*2) % 1
 
     if len(exp_bin) > 3 or len(mantissa)>5 or decimal != 0:
-        sys.stdout.write(f'Error at line {line_num}: Cannot represent given float in 8-bits\n')
+        sys.stdout.write('Error at line Cannot represent given float in 8-bits\n')
         sys.exit()
     immediate = '0' * (3-len(exp_bin)) + exp_bin + mantissa + '0' * (5-len(mantissa))
     return immediate
